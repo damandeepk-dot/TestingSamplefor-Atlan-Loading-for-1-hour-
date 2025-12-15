@@ -4,98 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>One Hour Loader</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
     body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #111827;
+      height: 100vh;
+      margin: 0;
     }
 
-    .card {
+    .container {
       background: #ffffff;
-      width: 380px;
-      padding: 32px;
-      border-radius: 20px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       text-align: center;
-      animation: fadeIn 0.6s ease;
+      width: 320px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    p {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 28px;
+    h2 {
+      margin-bottom: 20px;
     }
 
     button {
-      width: 100%;
-      padding: 14px;
+      padding: 12px 24px;
       font-size: 16px;
-      font-weight: 600;
-      border-radius: 12px;
       border: none;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: #ffffff;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
+      background-color: #4f46e5;
+      color: #fff;
     }
 
     button:disabled {
-      opacity: 0.6;
+      background-color: #9ca3af;
       cursor: not-allowed;
     }
 
     .loader {
-      margin: 32px auto 16px;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+      margin: 30px auto;
+      width: 50px;
+      height: 50px;
       border: 6px solid #e5e7eb;
-      border-top: 6px solid #6366f1;
+      border-top: 6px solid #4f46e5;
+      border-radius: 50%;
       animation: spin 1s linear infinite;
       display: none;
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .timer {
-      font-size: 14px;
-      color: #6b7280;
-      margin-top: 8px;
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .status {
-      margin-top: 24px;
-      font-size: 20px;
-      font-weight: 700;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
     }
 
     .success {
@@ -108,14 +75,10 @@
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Processing Request</h1>
-    <p>Click start to simulate a long-running operation</p>
-
+  <div class="container">
+    <h2>Long Running Loader</h2>
     <button id="startBtn">Start Loading</button>
-
     <div class="loader" id="loader"></div>
-    <div class="timer" id="timer"></div>
     <div class="status" id="status"></div>
   </div>
 
@@ -123,46 +86,27 @@
     const startBtn = document.getElementById("startBtn");
     const loader = document.getElementById("loader");
     const statusText = document.getElementById("status");
-    const timerText = document.getElementById("timer");
 
-    const ONE_HOUR = 1 * 1 * 10;
-    let interval;
-
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-      const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-      const secs = String(totalSeconds % 60).padStart(2, '0');
-      return `${hrs}:${mins}:${secs}`;
-    }
+    // 1 hour = 60 * 60 * 1000 ms
+    const ONE_HOUR = 60 * 60 * 1000;
 
     startBtn.addEventListener("click", () => {
       startBtn.disabled = true;
       statusText.textContent = "";
-      statusText.className = "status";
       loader.style.display = "block";
 
-      let remaining = ONE_HOUR;
-      timerText.textContent = `Time remaining: ${formatTime(remaining)}`;
-
-      interval = setInterval(() => {
-        remaining -= 1000;
-        timerText.textContent = `Time remaining: ${formatTime(remaining)}`;
-      }, 1000);
-
       setTimeout(() => {
-        clearInterval(interval);
         loader.style.display = "none";
-        timerText.textContent = "";
 
+        // Random success or failure
         const isSuccess = Math.random() >= 0.5;
 
         if (isSuccess) {
-          statusText.textContent = "✅ Success";
-          statusText.classList.add("success");
+          statusText.textContent = "Success!";
+          statusText.className = "status success";
         } else {
-          statusText.textContent = "❌ Failure";
-          statusText.classList.add("failure");
+          statusText.textContent = "Failure!";
+          statusText.className = "status failure";
         }
 
         startBtn.disabled = false;
@@ -170,8 +114,8 @@
     });
 
     /*
-      For quick testing, replace ONE_HOUR with:
-      const ONE_HOUR = 10 * 1000;
+      For testing purposes, you can temporarily replace ONE_HOUR with:
+      const ONE_HOUR = 10 * 1000; // 10 seconds
     */
   </script>
 </body>
