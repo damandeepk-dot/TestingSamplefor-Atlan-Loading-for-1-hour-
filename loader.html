@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Hour Loader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 320px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: #fff;
+    }
+
+    button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .loader {
+      margin: 30px auto;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #e5e7eb;
+      border-top: 6px solid #4f46e5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .success {
+      color: #16a34a;
+    }
+
+    .failure {
+      color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Long Running Loader</h2>
+    <button id="startBtn">Start Loading</button>
+    <div class="loader" id="loader"></div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const loader = document.getElementById("loader");
+    const statusText = document.getElementById("status");
+
+    // 1 hour = 60 * 60 * 1000 ms
+    const ONE_HOUR = 60 * 60 * 1000;
+
+    startBtn.addEventListener("click", () => {
+      startBtn.disabled = true;
+      statusText.textContent = "";
+      loader.style.display = "block";
+
+      setTimeout(() => {
+        loader.style.display = "none";
+
+        // Random success or failure
+        const isSuccess = Math.random() >= 0.5;
+
+        if (isSuccess) {
+          statusText.textContent = "Success!";
+          statusText.className = "status success";
+        } else {
+          statusText.textContent = "Failure!";
+          statusText.className = "status failure";
+        }
+
+        startBtn.disabled = false;
+      }, ONE_HOUR);
+    });
+
+    /*
+      For testing purposes, you can temporarily replace ONE_HOUR with:
+      const ONE_HOUR = 10 * 1000; // 10 seconds
+    */
+  </script>
+</body>
+</html>
